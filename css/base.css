@@ -1,19 +1,32 @@
+
 *, *:before, *:after {
     box-sizing: border-box;
 }
 
 body{
     margin: 0 auto;
+    background-color: darkslateblue;
 }
 
 header{
     margin: 0 auto;
-    left: 50%;
     text-align: center;
+    color: indianred;
+    font-family: 'Prompt', sans-serif;
+}
+
+.photos h2{
+    color: aliceblue;
+}
+
+ p{
+    font-size: 25px;
+    font-family: 'Prompt', sans-serif;
+    color: indianred;
 }
   
 #container {
-    width: 1000px;
+    width: 66%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -21,11 +34,13 @@ header{
     align-content: center;
     padding-top: 2%;
     text-align: center;
+    margin: 0 auto;
 }
 
   img {
-    height: 150px;
+    height: 300px;
 }
 
 footer{
+
 }

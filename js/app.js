@@ -18,12 +18,11 @@ Photo.prototype.render = function () {
 
     photoClone.find('img').attr('src', this.image_url);
     photoClone.find('h2').text(this.title);
-    photoClone.find('img').attr('alt', this.description);
+    photoClone.find('p').text(this.description);
     photoClone.addClass(this.keyword);
-    photoClone.find('p').text(this.horns);
+    // photoClone.find('p').text(`HORNS: ${this.horns}`);
 
     $('#container').append(photoClone);
-    console.log(this.title);
 }
 
 function loadPhotoData() {
