@@ -2,19 +2,23 @@
     box-sizing: border-box;
 }
 
-
 body{
     margin: 0 auto;
 }
 
+header{
+
+}
+  
 #container {
-    width: 75%;
-    border: 1px solid black;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: center;
 }
 
-img{
-    width: 100px;
+  img {
+    height: 150px;
 }
 
-.photos{
-}
