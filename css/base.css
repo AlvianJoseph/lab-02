@@ -1,3 +1,4 @@
+
 *, *:before, *:after {
     box-sizing: border-box;
 }
@@ -11,14 +12,17 @@ header{
     margin: 0 auto;
     text-align: center;
     color: indianred;
+    font-family: 'Prompt', sans-serif;
 }
 
 .photos h2{
     color: aliceblue;
 }
 
-.photos p{
-
+ p{
+    font-size: 25px;
+    font-family: 'Prompt', sans-serif;
+    color: indianred;
 }
   
 #container {
@@ -34,7 +38,7 @@ header{
 }
 
   img {
-    height: 150px;
+    height: 300px;
 }
 
 footer{
