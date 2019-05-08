@@ -4,16 +4,25 @@
 
 body{
     margin: 0 auto;
+    background-color: darkslateblue;
 }
 
 header{
     margin: 0 auto;
-    left: 50%;
     text-align: center;
+    color: indianred;
+}
+
+.photos h2{
+    color: aliceblue;
+}
+
+.photos p{
+
 }
   
 #container {
-    width: 1000px;
+    width: 66%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -21,6 +30,7 @@ header{
     align-content: center;
     padding-top: 2%;
     text-align: center;
+    margin: 0 auto;
 }
 
   img {
@@ -28,4 +38,5 @@ header{
 }
 
 footer{
+
 }
