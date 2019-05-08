@@ -10,33 +10,34 @@ function Photo(info) {
     this.title = info.title;
     this.description = info.description;
     this.keyword = info.keyword;
-    // this.horns = info.horns
+    this.horns = info.horns
 }
 
 Photo.prototype.render = function () {
     const photoClone = $('#photo-template').clone();
 
     photoClone.find('img').attr('src', this.img);
+    // photoClone.find('img').attr('alt', this.title);
     photoClone.find('h2').text(this.title);
     photoClone.find('p').text(this.description);
     photoClone.addClass(this.keyword);
-    // photoClone.find('p').text(`HORNS: ${this.horns}`);
 
-    $('#container').append(photoClone);
+    // clone.removeAttr('id');
+    $('.container').append(photoClone);
 }
 
 function loadPhotoData() {
 
     $.get('data/page-1.json', 'json')
         .then(rawPhotoObjects => {
-            rawPhotoObjects.forEach(item => photos.push(new Photo(item)));
+            rawPhotoObjects.forEach(photo => photos.push(new Photo(photo)));
 
         }).then(() => {
-            photos.forEach(item => {
-                const itemCheck = keywords.includes(item.keyword);
+            photos.forEach(photo => {
+                const itemCheck = keywords.includes(photo.keyword);
                 console.log(itemCheck);
                 if (!itemCheck) {
-                    keywords.push(item.keyword);
+                    keywords.push(photo.keyword);
                 }
             });
             Photo.renderPhotos = () => {
@@ -57,6 +58,10 @@ function loadPhotoData() {
                 const selection = $(this).val()
                 $('section').hide();
                 $(`section[class="${selection}"]`).show();
+                
+                if(selection === 'default'){
+                    $('section').show();
+                }
             });
             // wire up an event handler that will listen
             // for the 'change' event

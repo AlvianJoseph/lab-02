@@ -25,7 +25,7 @@ header{
     color: indianred;
 }
   
-#container {
+.container {
     width: 66%;
     display: flex;
     flex-wrap: wrap;
@@ -35,6 +35,10 @@ header{
     padding-top: 2%;
     text-align: center;
     margin: 0 auto;
+}
+
+section {
+
 }
 
   img {
