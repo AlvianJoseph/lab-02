@@ -6,17 +6,17 @@ const keywords = [];
 
 // construct a Photo given some information fetched externally
 function Photo(info) {
-    this.image_url = info.image_url;
+    this.img = info.image_url;
     this.title = info.title;
     this.description = info.description;
     this.keyword = info.keyword;
-    this.horns = info.horns
+    // this.horns = info.horns
 }
 
 Photo.prototype.render = function () {
     const photoClone = $('#photo-template').clone();
 
-    photoClone.find('img').attr('src', this.image_url);
+    photoClone.find('img').attr('src', this.img);
     photoClone.find('h2').text(this.title);
     photoClone.find('p').text(this.description);
     photoClone.addClass(this.keyword);
@@ -29,22 +29,13 @@ function loadPhotoData() {
 
     $.get('data/page-1.json', 'json')
         .then(rawPhotoObjects => {
-
-            rawPhotoObjects.forEach(item => {
-                photos.push(new Photo(item));
-            });
-            console.log(photos);
-
-
-            // convert the raw photo objects into Photo instances
-            // add each instance to photos array
+            rawPhotoObjects.forEach(item => photos.push(new Photo(item)));
 
         }).then(() => {
-
             photos.forEach(item => {
                 const itemCheck = keywords.includes(item.keyword);
                 console.log(itemCheck);
-                if (itemCheck === false) {
+                if (!itemCheck) {
                     keywords.push(item.keyword);
                 }
             });
@@ -55,18 +46,11 @@ function loadPhotoData() {
             };
             Photo.renderPhotos();
 
-            // for each Photo instance
-            // 1) add the photo's keyword to keywords array, avoid duplicates
-            // 2) "render" the photo to the screen
-
         }).then(() => {
             keywords.forEach(keyword => {
                 let newOption = `<option value ="${keyword}">${keyword}</option>`
                 $('select').append(newOption);
             })
-
-            // populate <select> element with options
-            // based on keywords array
 
         }).then(() => {
             $("select").on('change', function () {
@@ -82,7 +66,6 @@ function loadPhotoData() {
         });
 }
 
-// when jQuery says document is ready then call function to load photo data
 $(document).ready(function () {
     loadPhotoData();
 });
