@@ -1,0 +1,20 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+
+body{
+    margin: 0 auto;
+}
+
+#container {
+    width: 75%;
+    border: 1px solid black;
+}
+
+img{
+    width: 100px;
+}
+
+.photos{
+}
