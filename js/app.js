@@ -20,7 +20,7 @@ $(document).ready(function () {
         let templateRender = Handlebars.compile(template);
         return templateRender(this);
     };
-    
+
     photoObjectArr.forEach(photoObj => {
         photos.push(new Photo(photoObj));
     });
@@ -28,10 +28,13 @@ $(document).ready(function () {
     photos.forEach(photo => {
         horns.push(photo.horns);
     })
-    
-    photos.forEach(newPhotoObj => {
-        $(".container").append(newPhotoObj.toHtml());
-    });
+
+    const renderPhotos = () => {
+        photos.forEach(newPhotoObj => {
+            $(".container").append(newPhotoObj.toHtml());
+        });
+    }
+    renderPhotos();
 
     photos.forEach(photo => {
         const itemCheck = keywords.includes(photo.keyword);
@@ -46,11 +49,46 @@ $(document).ready(function () {
     })
 
 
-    let sortOption = `<option value =${horns}>Number of Horns</option>`
-    $('.sortBy').append(sortOption)    
+    let sortHorns = `<option value= "horns" >Number of Horns</option>`
+    $('.sortBy').append(sortHorns)
+
+    let sortTitle = `<option value= "title" >Title</option>`
+    $('.sortBy').append(sortTitle)
+
+    const sortByHorns = () => {
+        photos.sort((a, b) => {
+            return a.horns - b.horns;
+        });
+    }
+    
+    const sortByTitle = () => {
+        photos.sort(function (a, b) {
+            if (a.title.toUpperCase() < b.title.toUpperCase()) {
+                return -1;
+            }
+            if (a.title.toUpperCase() > b.title.toUpperCase()) {
+                return 1;
+            }
+    
+            return 0;
+        });
+    }
+    
+    $(".sortBy").on('change', function () {
+        $(".container").empty()
+        const selectHorn = $(this).val()
+        if (selectHorn === "horns") {
+            sortByHorns();
+            renderPhotos();
+        }
+        if (selectHorn === "title") {
+            sortByTitle();
+            renderPhotos();
+        }
+    
+    });
+
 });
-
-
 
 $(".unsorted").on('change', function () {
     const selection = $(this).val()
@@ -58,22 +96,8 @@ $(".unsorted").on('change', function () {
     $(`section[class="${selection}"]`).show();
 
     if (selection === 'default') {
-        sortByHorns();
         $('section').show();
     }
 });
 
-const sortByHorns  = () => {
-    photos.sort((a, b) => {
-    return a.horns - b.horns;
-  });
-}
 
-$(".sortBy").on('change', function () {
-$(".container").empty()
- sortByHorns();
- photos.forEach(newPhotoObj => {
-    $(".container").append(newPhotoObj.toHtml());
-});
-
-});
