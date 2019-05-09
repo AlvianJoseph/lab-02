@@ -22,27 +22,28 @@ header{
  p{
     font-size: 25px;
     font-family: 'Prompt', sans-serif;
-    color: indianred;
+    color: aliceblue;
 }
   
 .container {
-    width: 66%;
+    width: 90%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    justify-content: space-evenly;
-    align-content: center;
+    /* justify-content: space-evenly; */
+    /* align-content: center; */
     padding-top: 2%;
     text-align: center;
     margin: 0 auto;
 }
 
 section {
-
+    width: 20%;
+    border: 2.5px solid indianred;
 }
 
   img {
-    height: 300px;
+    height: 175px;
 }
 
 footer{

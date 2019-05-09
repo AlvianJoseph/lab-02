@@ -1,76 +1,79 @@
-// store the photo objects we'll be creating and displaying
+'use strict';
+
 const photos = [];
 
-// store keywords that will populate select drop down
 const keywords = [];
 
-// construct a Photo given some information fetched externally
-function Photo(info) {
-    this.img = info.image_url;
-    this.title = info.title;
-    this.description = info.description;
-    this.keyword = info.keyword;
-    this.horns = info.horns
-}
+const horns = [];
 
-Photo.prototype.render = function () {
-    const photoClone = $('#photo-template').clone();
 
-    photoClone.find('img').attr('src', this.img);
-    // photoClone.find('img').attr('alt', this.title);
-    photoClone.find('h2').text(this.title);
-    photoClone.find('p').text(this.description);
-    photoClone.addClass(this.keyword);
-
-    // clone.removeAttr('id');
-    $('.container').append(photoClone);
-}
-
-function loadPhotoData() {
-
-    $.get('data/page-1.json', 'json')
-        .then(rawPhotoObjects => {
-            rawPhotoObjects.forEach(photo => photos.push(new Photo(photo)));
-
-        }).then(() => {
-            photos.forEach(photo => {
-                const itemCheck = keywords.includes(photo.keyword);
-                console.log(itemCheck);
-                if (!itemCheck) {
-                    keywords.push(photo.keyword);
-                }
-            });
-            Photo.renderPhotos = () => {
-                photos.forEach(item => {
-                    item.render()
-                });
-            };
-            Photo.renderPhotos();
-
-        }).then(() => {
-            keywords.forEach(keyword => {
-                let newOption = `<option value ="${keyword}">${keyword}</option>`
-                $('select').append(newOption);
-            })
-
-        }).then(() => {
-            $("select").on('change', function () {
-                const selection = $(this).val()
-                $('section').hide();
-                $(`section[class="${selection}"]`).show();
-                
-                if(selection === 'default'){
-                    $('section').show();
-                }
-            });
-            // wire up an event handler that will listen
-            // for the 'change' event
-            // and show only photos that match selected value
-            // should show all if on 'default' selection
-
-        });
+// REVIEW: This is another way to use a constructor to duplicate an array of raw data objects
+function Photo(rawDataObject) {
+    for (let key in rawDataObject) {
+        this[key] = rawDataObject[key];
+    }
 }
 
 $(document).ready(function () {
-    loadPhotoData();
+    Photo.prototype.toHtml = function () {
+        let template = $("#photo-template").html();
+        let templateRender = Handlebars.compile(template);
+        return templateRender(this);
+    };
+    
+    photoObjectArr.forEach(photoObj => {
+        photos.push(new Photo(photoObj));
+    });
+
+    photos.forEach(photo => {
+        horns.push(photo.horns);
+    })
+    
+    photos.forEach(newPhotoObj => {
+        $(".container").append(newPhotoObj.toHtml());
+    });
+
+    photos.forEach(photo => {
+        const itemCheck = keywords.includes(photo.keyword);
+        if (!itemCheck) {
+            keywords.push(photo.keyword);
+        }
+    });
+
+    keywords.forEach(keyword => {
+        let newOption = `<option value ="${keyword}">${keyword}</option>`
+        $('.unsorted').append(newOption)
+    })
+
+
+    let sortOption = `<option value =${horns}>Number of Horns</option>`
+    $('.sortBy').append(sortOption)    
+});
+
+
+
+$(".unsorted").on('change', function () {
+    const selection = $(this).val()
+    $("section").hide();
+    $(`section[class="${selection}"]`).show();
+
+    if (selection === 'default') {
+        sortByHorns();
+        $('section').show();
+    }
+});
+
+const sortByHorns  = () => {
+    photos.sort((a, b) => {
+    return a.horns - b.horns;
+  });
+}
+
+$(".sortBy").on('change', function () {
+$(".container").empty()
+ sortByHorns();
+ photos.forEach(newPhotoObj => {
+    $(".container").append(newPhotoObj.toHtml());
+});
+
 });
