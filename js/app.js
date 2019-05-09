@@ -4,9 +4,6 @@ const photos = [];
 
 const keywords = [];
 
-const horns = [];
-
-
 // REVIEW: This is another way to use a constructor to duplicate an array of raw data objects
 function Photo(rawDataObject) {
     for (let key in rawDataObject) {
@@ -25,36 +22,12 @@ $(document).ready(function () {
         photos.push(new Photo(photoObj));
     });
 
-    photos.forEach(photo => {
-        horns.push(photo.horns);
-    })
-
     const renderPhotos = () => {
         photos.forEach(newPhotoObj => {
             $(".container").append(newPhotoObj.toHtml());
         });
     }
-    renderPhotos();
-
-    photos.forEach(photo => {
-        const itemCheck = keywords.includes(photo.keyword);
-        if (!itemCheck) {
-            keywords.push(photo.keyword);
-        }
-    });
-
-    keywords.forEach(keyword => {
-        let newOption = `<option value ="${keyword}">${keyword}</option>`
-        $('.unsorted').append(newOption)
-    })
-
-
-    let sortHorns = `<option value= "horns" >Number of Horns</option>`
-    $('.sortBy').append(sortHorns)
-
-    let sortTitle = `<option value= "title" >Title</option>`
-    $('.sortBy').append(sortTitle)
-
+    
     const sortByHorns = () => {
         photos.sort((a, b) => {
             return a.horns - b.horns;
@@ -69,10 +42,37 @@ $(document).ready(function () {
             if (a.title.toUpperCase() > b.title.toUpperCase()) {
                 return 1;
             }
-    
             return 0;
         });
     }
+    sortByTitle();
+    renderPhotos();
+
+    photos.forEach(photo => {
+        const itemCheck = keywords.includes(photo.keyword);
+        if (!itemCheck) {
+            keywords.push(photo.keyword);
+        }
+    });
+
+    const sortKeywords = () => {
+        keywords.sort(function (a, b) {
+            if (a.toUpperCase() < b.toUpperCase()) {
+                return -1;
+            }
+            if (a.toUpperCase() > b.toUpperCase()) {
+                return 1;
+            }
+            return 0;
+        });
+    }
+    sortKeywords();
+    keywords.forEach(keyword => {
+        let newOption = `<option value ="${keyword}">${keyword}</option>`
+        $('.keywords').append(newOption)
+    })
+
+
     
     $(".sortBy").on('change', function () {
         $(".container").empty()
@@ -85,19 +85,15 @@ $(document).ready(function () {
             sortByTitle();
             renderPhotos();
         }
-    
     });
 
+    $(".unsorted").on('change', function () {
+        $("section").hide();
+        const selection = $(this).val()
+        
+        $(`section[class="${selection}"]`).show();
+        if (selection === 'default') {
+            $('section').show();
+        }
+    });
 });
-
-$(".unsorted").on('change', function () {
-    const selection = $(this).val()
-    $("section").hide();
-    $(`section[class="${selection}"]`).show();
-
-    if (selection === 'default') {
-        $('section').show();
-    }
-});
-
-
