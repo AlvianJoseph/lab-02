@@ -4,6 +4,8 @@ const photos = [];
 
 const keywords = [];
 
+const horns = [];
+
 
 // REVIEW: This is another way to use a constructor to duplicate an array of raw data objects
 function Photo(rawDataObject) {
@@ -18,11 +20,15 @@ $(document).ready(function () {
         let templateRender = Handlebars.compile(template);
         return templateRender(this);
     };
-
+    
     photoObjectArr.forEach(photoObj => {
         photos.push(new Photo(photoObj));
     });
 
+    photos.forEach(photo => {
+        horns.push(photo.horns);
+    })
+    
     photos.forEach(newPhotoObj => {
         $(".container").append(newPhotoObj.toHtml());
     });
@@ -36,17 +42,38 @@ $(document).ready(function () {
 
     keywords.forEach(keyword => {
         let newOption = `<option value ="${keyword}">${keyword}</option>`
-        $('select').append(newOption)
+        $('.unsorted').append(newOption)
     })
+
+
+    let sortOption = `<option value =${horns}>Number of Horns</option>`
+    $('.sortBy').append(sortOption)    
 });
 
-$("select").on('change', function () {
+
+
+$(".unsorted").on('change', function () {
     const selection = $(this).val()
-    console.log(selection);
     $("section").hide();
     $(`section[class="${selection}"]`).show();
 
     if (selection === 'default') {
+        sortByHorns();
         $('section').show();
     }
+});
+
+const sortByHorns  = () => {
+    photos.sort((a, b) => {
+    return a.horns - b.horns;
+  });
+}
+
+$(".sortBy").on('change', function () {
+$(".container").empty()
+ sortByHorns();
+ photos.forEach(newPhotoObj => {
+    $(".container").append(newPhotoObj.toHtml());
+});
+
 });
