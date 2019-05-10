@@ -4,9 +4,6 @@ const photos = [];
 
 const keywords = [];
 
-const horns = [];
-
-
 // REVIEW: This is another way to use a constructor to duplicate an array of raw data objects
 function Photo(rawDataObject) {
     for (let key in rawDataObject) {
@@ -20,18 +17,36 @@ $(document).ready(function () {
         let templateRender = Handlebars.compile(template);
         return templateRender(this);
     };
-    
+
     photoObjectArr.forEach(photoObj => {
         photos.push(new Photo(photoObj));
     });
 
-    photos.forEach(photo => {
-        horns.push(photo.horns);
-    })
+    const renderPhotos = () => {
+        photos.forEach(newPhotoObj => {
+            $(".container").append(newPhotoObj.toHtml());
+        });
+    }
     
-    photos.forEach(newPhotoObj => {
-        $(".container").append(newPhotoObj.toHtml());
-    });
+    const sortByHorns = () => {
+        photos.sort((a, b) => {
+            return a.horns - b.horns;
+        });
+    }
+    
+    const sortByTitle = () => {
+        photos.sort(function (a, b) {
+            if (a.title.toUpperCase() < b.title.toUpperCase()) {
+                return -1;
+            }
+            if (a.title.toUpperCase() > b.title.toUpperCase()) {
+                return 1;
+            }
+            return 0;
+        });
+    }
+    sortByTitle();
+    renderPhotos();
 
     photos.forEach(photo => {
         const itemCheck = keywords.includes(photo.keyword);
@@ -40,40 +55,43 @@ $(document).ready(function () {
         }
     });
 
+    const sortKeywords = () => {
+        keywords.sort(function (a, b) {
+            if (a.toUpperCase() < b.toUpperCase()) {
+                return -1;
+            }
+            if (a.toUpperCase() > b.toUpperCase()) {
+                return 1;
+            }
+            return 0;
+        });
+    }
+    sortKeywords();
     keywords.forEach(keyword => {
         let newOption = `<option value ="${keyword}">${keyword}</option>`
-        $('.unsorted').append(newOption)
+        $('.keywords').append(newOption)
     })
 
+    $(".sortBy").on('change', function () {
+        $(".container").empty()
+        const selectHorn = $(this).val()
+        if (selectHorn === "horns") {
+            sortByHorns();
+            renderPhotos();
+        }
+        if (selectHorn === "title") {
+            sortByTitle();
+            renderPhotos();
+        }
+    });
 
-    let sortOption = `<option value =${horns}>Number of Horns</option>`
-    $('.sortBy').append(sortOption)    
-});
-
-
-
-$(".unsorted").on('change', function () {
-    const selection = $(this).val()
-    $("section").hide();
-    $(`section[class="${selection}"]`).show();
-
-    if (selection === 'default') {
-        sortByHorns();
-        $('section').show();
-    }
-});
-
-const sortByHorns  = () => {
-    photos.sort((a, b) => {
-    return a.horns - b.horns;
-  });
-}
-
-$(".sortBy").on('change', function () {
-$(".container").empty()
- sortByHorns();
- photos.forEach(newPhotoObj => {
-    $(".container").append(newPhotoObj.toHtml());
-});
-
+    $(".unsorted").on('change', function () {
+        $("section").hide();
+        const selection = $(this).val()
+        
+        $(`section[class="${selection}"]`).show();
+        if (selection === 'default') {
+            $('section').show();
+        }
+    });
 });
