@@ -72,8 +72,6 @@ $(document).ready(function () {
         $('.keywords').append(newOption)
     })
 
-
-    
     $(".sortBy").on('change', function () {
         $(".container").empty()
         const selectHorn = $(this).val()
