@@ -1,8 +1,10 @@
 'use strict';
 
-const photos = [];
+let defaultPageArr = [];
+let defaultKeywords = [];
 
-const keywords = [];
+const page2Arr = [];
+const page2Keywords = [];
 
 // REVIEW: This is another way to use a constructor to duplicate an array of raw data objects
 function Photo(rawDataObject) {
@@ -18,24 +20,52 @@ $(document).ready(function () {
         return templateRender(this);
     };
 
-    photoObjectArr.forEach(photoObj => {
-        photos.push(new Photo(photoObj));
+    // Gather data from each data page and push them to different arrays
+    page1data.forEach(photoObj => {
+        defaultPageArr.push(new Photo(photoObj));
+    });
+    page2data.forEach(photoObj => {
+        page2Arr.push(new Photo(photoObj));
+    });
+
+    //Get keyword value from each data page and push to different arrays
+    defaultPageArr.forEach(photo => {
+        const itemCheck = defaultKeywords.includes(photo.keyword);
+        if (!itemCheck) {
+            defaultKeywords.push(photo.keyword);
+        }
+    });
+
+    page2Arr.forEach(photo => {
+        const itemCheck = page2Keywords.includes(photo.keyword);
+        if (!itemCheck) {
+            page2Keywords.push(photo.keyword);
+        }
     });
 
     const renderPhotos = () => {
-        photos.forEach(newPhotoObj => {
+        defaultPageArr.forEach(newPhotoObj => {
             $(".container").append(newPhotoObj.toHtml());
         });
     }
-    
+
+    const renderKeywords = () => {
+        // $('.keywords').empty();
+        defaultKeywords.forEach(keyword => {
+            let newOption = `<option value ="${keyword}">${keyword}</option>`
+            $('.keywords').append(newOption)
+        })
+    }
+    renderKeywords();
+
     const sortByHorns = () => {
-        photos.sort((a, b) => {
+        defaultPageArr.sort((a, b) => {
             return a.horns - b.horns;
         });
     }
-    
+
     const sortByTitle = () => {
-        photos.sort(function (a, b) {
+        defaultPageArr.sort(function (a, b) {
             if (a.title.toUpperCase() < b.title.toUpperCase()) {
                 return -1;
             }
@@ -48,15 +78,24 @@ $(document).ready(function () {
     sortByTitle();
     renderPhotos();
 
-    photos.forEach(photo => {
-        const itemCheck = keywords.includes(photo.keyword);
-        if (!itemCheck) {
-            keywords.push(photo.keyword);
+    $('.pages').on('change', function () {
+        $(".container").empty()
+        const thisPage = $(this).val()
+        if (thisPage === "default") {
+            defaultPageArr = defaultPageArr;
+            defaultKeywords = defaultKeywords;
+            // sortByTitle();
+            renderPhotos();
+        } else if (thisPage === 'page 2') {
+            defaultPageArr = page2Arr;
+            defaultKeywords = page2Keywords;
+            // sortByTitle();
+            renderPhotos();
         }
-    });
+    })
 
     const sortKeywords = () => {
-        keywords.sort(function (a, b) {
+        defaultKeywords.sort(function (a, b) {
             if (a.toUpperCase() < b.toUpperCase()) {
                 return -1;
             }
@@ -67,10 +106,6 @@ $(document).ready(function () {
         });
     }
     sortKeywords();
-    keywords.forEach(keyword => {
-        let newOption = `<option value ="${keyword}">${keyword}</option>`
-        $('.keywords').append(newOption)
-    })
 
     $(".sortBy").on('change', function () {
         $(".container").empty()
@@ -85,10 +120,10 @@ $(document).ready(function () {
         }
     });
 
-    $(".unsorted").on('change', function () {
+    $(".keywords").on('change', function () {
         $("section").hide();
         const selection = $(this).val()
-        
+
         $(`section[class="${selection}"]`).show();
         if (selection === 'default') {
             $('section').show();
